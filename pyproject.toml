@@ -1,0 +1,18 @@
+[project]
+name = "python-component-schema"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pulumi>=3.145.0",
+    "pytest>=8.3.4",
+]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+extraPaths = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

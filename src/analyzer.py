@@ -15,6 +15,8 @@ from typing import (
 
 import pulumi
 
+from util import camel_case
+
 
 @dataclass
 class SchemaProperty:
@@ -64,7 +66,7 @@ class Analyzer:
             if inspect.isclass(obj):
                 if pulumi.ComponentResource in obj.__bases__:
                     component = self.analyze_component(obj)
-                    components[name] = component
+                    components[self.arg_name(name)] = component
         return components
 
     def find_component(self, name: str) -> tuple[type[pulumi.ComponentResource], type]:
@@ -115,7 +117,11 @@ class Analyzer:
         self, component: type[pulumi.ComponentResource]
     ) -> list[str]:
         """Returns the names of the output properties of a component."""
-        return [k for k, v in component.__annotations__.items() if is_output(v)]
+        return [
+            self.arg_name(k)
+            for k, v in component.__annotations__.items()
+            if is_output(v)
+        ]
 
     def analyze_types(self, typ: type) -> dict[str, SchemaProperty]:
         """
@@ -138,7 +144,10 @@ class Analyzer:
         # TODO: should we use get_type_hints instead to resolve ForwardRefs?
         # What's the global context?
         # hints = get_type_hints(typ, globalns=globals())
-        return {k: self.analyze_arg(typ) for k, typ in typ.__annotations__.items()}
+        return {
+            self.arg_name(k): self.analyze_arg(typ)
+            for k, typ in typ.__annotations__.items()
+        }
 
     def analyze_arg(self, arg: type) -> SchemaProperty:
         """
@@ -169,6 +178,9 @@ class Analyzer:
             optional=arg_is_optional,
             description="",
         )
+
+    def arg_name(self, name: str) -> str:
+        return camel_case(name)
 
 
 def is_plain(typ: type) -> bool:

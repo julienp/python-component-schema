@@ -27,16 +27,16 @@ def test_analyze_component():
             "algorithm": SchemaProperty(
                 type=str, ref=None, optional=True, description=""
             ),
-            "ecdsa_curve": SchemaProperty(
+            "ecdsaCurve": SchemaProperty(
                 type=str, ref=None, optional=True, description=""
             ),
         },
         outputs={
             "pem": SchemaProperty(type=str, ref=None, optional=False, description=""),
-            "private_key": SchemaProperty(
+            "privateKey": SchemaProperty(
                 type=str, ref=None, optional=False, description=""
             ),
-            "ca_cert": SchemaProperty(
+            "caCert": SchemaProperty(
                 type=str, ref=None, optional=False, description=""
             ),
         },
@@ -54,7 +54,7 @@ def test_analyze_from_path():
                 "algorithm": SchemaProperty(
                     type=str, ref=None, optional=True, description=""
                 ),
-                "ecdsa_curve": SchemaProperty(
+                "ecdsaCurve": SchemaProperty(
                     type=str, ref=None, optional=True, description=""
                 ),
             },
@@ -62,10 +62,10 @@ def test_analyze_from_path():
                 "pem": SchemaProperty(
                     type=str, ref=None, optional=False, description=""
                 ),
-                "private_key": SchemaProperty(
+                "privateKey": SchemaProperty(
                     type=str, ref=None, optional=False, description=""
                 ),
-                "ca_cert": SchemaProperty(
+                "caCert": SchemaProperty(
                     type=str, ref=None, optional=False, description=""
                 ),
             },
@@ -94,9 +94,7 @@ def test_analyze_types_output():
     args = a.analyze_types(SelfSignedCertificateArgs)
     assert args == {
         "algorithm": SchemaProperty(type=str, ref=None, optional=False, description=""),
-        "ecdsa_curve": SchemaProperty(
-            type=str, ref=None, optional=True, description=""
-        ),
+        "ecdsaCurve": SchemaProperty(type=str, ref=None, optional=True, description=""),
     }
 
 
@@ -109,7 +107,5 @@ def test_analyze_types_input():
     args = a.analyze_types(SelfSignedCertificateArgs)
     assert args == {
         "algorithm": SchemaProperty(type=str, ref=None, optional=False, description=""),
-        "ecdsa_curve": SchemaProperty(
-            type=str, ref=None, optional=True, description=""
-        ),
+        "ecdsaCurve": SchemaProperty(type=str, ref=None, optional=True, description=""),
     }

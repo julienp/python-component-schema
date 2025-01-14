@@ -7,6 +7,7 @@ from pulumi.provider import ConstructResult, Provider  # ParameterizeResult
 
 from analyzer import Analyzer
 from schema import generate_schema
+from util import python_name
 
 
 class ComponentProvider(Provider):
@@ -33,7 +34,7 @@ class ComponentProvider(Provider):
         a = Analyzer(self.path)
         component_name = resource_type.split(":")[-1]
         comp, comp_args = a.find_component(component_name)
-        args = comp_args(**inputs)
+        args = comp_args(**{python_name(k): v for k, v in inputs.items()})
         comp_instance = cast(Any, comp)(name, args, options)
         keys = a.analyze_component_outputs(type(comp_instance))
         state = {k: getattr(comp_instance, k, None) for k in keys}

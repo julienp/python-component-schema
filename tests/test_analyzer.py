@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Optional
+
 import pulumi
 
 from analyzer import Analyzer, ComponentSchema, SchemaProperty

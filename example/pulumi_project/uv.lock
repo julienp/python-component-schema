@@ -115,7 +115,7 @@ wheels = [
 [[package]]
 name = "pulumi-banana"
 version = "0.0.0"
-source = { editable = "../generated-sdk/python" }
+source = { directory = "sdks/banana" }
 dependencies = [
     { name = "parver" },
     { name = "pulumi" },
@@ -142,7 +142,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "pulumi", specifier = ">=3.145.0" },
-    { name = "pulumi-banana", editable = "../generated-sdk/python" },
+    { name = "pulumi-banana", directory = "sdks/banana" },
 ]
 
 [[package]]

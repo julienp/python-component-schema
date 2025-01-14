@@ -101,8 +101,8 @@ wheels = [
 
 [[package]]
 name = "pulumi"
-version = "3.145.1"
-source = { editable = "../../pulumi/pulumi/sdk/python" }
+version = "3.145.0"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "debugpy" },
     { name = "dill" },
@@ -113,33 +113,8 @@ dependencies = [
     { name = "semver" },
     { name = "six" },
 ]
-
-[package.metadata]
-requires-dist = [
-    { name = "debugpy", specifier = "~=1.8.7" },
-    { name = "dill", specifier = "~=0.3" },
-    { name = "grpcio", specifier = "~=1.66.2" },
-    { name = "pip", specifier = "~=24.3.1" },
-    { name = "protobuf", specifier = "~=4.21" },
-    { name = "pyyaml", specifier = "~=6.0" },
-    { name = "semver", specifier = "~=2.13" },
-    { name = "six", specifier = "~=1.12" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "build", specifier = ">=1.2.2.post1" },
-    { name = "coverage", specifier = ">=6.0.2" },
-    { name = "mypy", specifier = "==1.9.0" },
-    { name = "pyright", specifier = "==1.1.375" },
-    { name = "pytest", specifier = "~=7.4.4" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-timeout" },
-    { name = "ruff", specifier = "==0.8.0" },
-    { name = "types-protobuf" },
-    { name = "types-pyyaml" },
-    { name = "types-six" },
-    { name = "wheel" },
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/45/2a/c2f4537811ef6851df16234965bd9ea6f0ec25bbc640ce343a2a83440ad3/pulumi-3.145.0-py3-none-any.whl", hash = "sha256:5ef1e73e8c07fd25fcfa2e5a68d03e84141d23e584153915c328ec1de6f14611", size = 297250 },
 ]
 
 [[package]]
@@ -168,7 +143,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "pulumi", editable = "../../pulumi/pulumi/sdk/python" },
+    { name = "pulumi", specifier = ">=3.145.0" },
     { name = "pytest", specifier = ">=8.3.4" },
 ]
 

@@ -1,0 +1,323 @@
+[01/14/2025 12:32] __annotations__ {'algorithm': typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType], 'ecdsa_curve': typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType], 'rsa_bits': typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]}
+[01/14/2025 12:32] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:32] origin: typing.Union
+[01/14/2025 12:32] args_t: (<class 'str'>, typing.Awaitable[str], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:32] arg_is_optional: True
+[01/14/2025 12:32] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'str'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'str'>
+[01/14/2025 12:32] arg_is_input: True
+[01/14/2025 12:32] arg_is_output: False
+[01/14/2025 12:32] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'str'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'str'>
+[01/14/2025 12:32] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:32] origin: typing.Union
+[01/14/2025 12:32] args_t: (<class 'str'>, typing.Awaitable[str], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:32] arg_is_optional: True
+[01/14/2025 12:32] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'str'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'str'>
+[01/14/2025 12:32] arg_is_input: True
+[01/14/2025 12:32] arg_is_output: False
+[01/14/2025 12:32] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'str'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'str'>
+[01/14/2025 12:32] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:32] origin: typing.Union
+[01/14/2025 12:32] args_t: (<class 'int'>, typing.Awaitable[int], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:32] arg_is_optional: True
+[01/14/2025 12:32] is_input typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'int'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'int'>
+[01/14/2025 12:32] arg_is_input: True
+[01/14/2025 12:32] arg_is_output: False
+[01/14/2025 12:32] is_input typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'int'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'int'>
+[01/14/2025 12:32] __annotations__ {'ca_cert_pem': pulumi.output.Output[str], 'private_key': pulumi.output.Output[str]}
+[01/14/2025 12:32] 
+type(arg): <class 'typing._GenericAlias'>
+[01/14/2025 12:32] origin: <class 'pulumi.output.Output'>
+[01/14/2025 12:32] args_t: (<class 'str'>,)
+[01/14/2025 12:32] arg_is_optional: False
+[01/14/2025 12:32] is_input pulumi.output.Output[str]
+[01/14/2025 12:32] arg_is_input: False
+[01/14/2025 12:32] arg_is_output: True
+[01/14/2025 12:32] 
+type(arg): <class 'typing._GenericAlias'>
+[01/14/2025 12:32] origin: <class 'pulumi.output.Output'>
+[01/14/2025 12:32] args_t: (<class 'str'>,)
+[01/14/2025 12:32] arg_is_optional: False
+[01/14/2025 12:32] is_input pulumi.output.Output[str]
+[01/14/2025 12:32] arg_is_input: False
+[01/14/2025 12:32] arg_is_output: True
+[01/14/2025 12:32] Creating self-signed certificate name=cert args=SelfSignedCertificateArgs(algorithm='RSA', ecdsa_curve='P224', rsa_bits=2048.0) opts=<pulumi.resource.ResourceOptions object at 0x105b00ad0>
+[01/14/2025 12:32] comp_instance: <component.SelfSignedCertificate object at 0x105b00590>
+[01/14/2025 12:32] keys: ['ca_cert_pem', 'private_key']
+[01/14/2025 12:32] __annotations__ {'algorithm': typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType], 'ecdsa_curve': typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType], 'rsa_bits': typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]}
+[01/14/2025 12:32] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:32] origin: typing.Union
+[01/14/2025 12:32] args_t: (<class 'str'>, typing.Awaitable[str], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:32] arg_is_optional: True
+[01/14/2025 12:32] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'str'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'str'>
+[01/14/2025 12:32] arg_is_input: True
+[01/14/2025 12:32] arg_is_output: False
+[01/14/2025 12:32] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'str'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'str'>
+[01/14/2025 12:32] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:32] origin: typing.Union
+[01/14/2025 12:32] args_t: (<class 'str'>, typing.Awaitable[str], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:32] arg_is_optional: True
+[01/14/2025 12:32] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'str'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'str'>
+[01/14/2025 12:32] arg_is_input: True
+[01/14/2025 12:32] arg_is_output: False
+[01/14/2025 12:32] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'str'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'str'>
+[01/14/2025 12:32] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:32] origin: typing.Union
+[01/14/2025 12:32] args_t: (<class 'int'>, typing.Awaitable[int], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:32] arg_is_optional: True
+[01/14/2025 12:32] is_input typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'int'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'int'>
+[01/14/2025 12:32] arg_is_input: True
+[01/14/2025 12:32] arg_is_output: False
+[01/14/2025 12:32] is_input typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:32] typeVar: None
+[01/14/2025 12:32] awaitable args = (<class 'int'>,)
+[01/14/2025 12:32] has_awaitable: True
+[01/14/2025 12:32] has_output: True
+[01/14/2025 12:32] base_type: <class 'int'>
+[01/14/2025 12:32] __annotations__ {'ca_cert_pem': pulumi.output.Output[str], 'private_key': pulumi.output.Output[str]}
+[01/14/2025 12:32] 
+type(arg): <class 'typing._GenericAlias'>
+[01/14/2025 12:32] origin: <class 'pulumi.output.Output'>
+[01/14/2025 12:32] args_t: (<class 'str'>,)
+[01/14/2025 12:32] arg_is_optional: False
+[01/14/2025 12:32] is_input pulumi.output.Output[str]
+[01/14/2025 12:32] arg_is_input: False
+[01/14/2025 12:32] arg_is_output: True
+[01/14/2025 12:32] 
+type(arg): <class 'typing._GenericAlias'>
+[01/14/2025 12:32] origin: <class 'pulumi.output.Output'>
+[01/14/2025 12:32] args_t: (<class 'str'>,)
+[01/14/2025 12:32] arg_is_optional: False
+[01/14/2025 12:32] is_input pulumi.output.Output[str]
+[01/14/2025 12:32] arg_is_input: False
+[01/14/2025 12:32] arg_is_output: True
+[01/14/2025 12:32] Creating self-signed certificate name=cert args=SelfSignedCertificateArgs(algorithm='RSA', ecdsa_curve='P224', rsa_bits=2048.0) opts=<pulumi.resource.ResourceOptions object at 0x1039dcad0>
+[01/14/2025 12:32] comp_instance: <component.SelfSignedCertificate object at 0x1039dc590>
+[01/14/2025 12:32] keys: ['ca_cert_pem', 'private_key']
+[01/14/2025 12:33] __annotations__ {'algorithm': typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType], 'ecdsa_curve': typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType], 'rsa_bits': typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]}
+[01/14/2025 12:33] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:33] origin: typing.Union
+[01/14/2025 12:33] args_t: (<class 'str'>, typing.Awaitable[str], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:33] arg_is_optional: True
+[01/14/2025 12:33] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'str'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'str'>
+[01/14/2025 12:33] arg_is_input: True
+[01/14/2025 12:33] arg_is_output: False
+[01/14/2025 12:33] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'str'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'str'>
+[01/14/2025 12:33] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:33] origin: typing.Union
+[01/14/2025 12:33] args_t: (<class 'str'>, typing.Awaitable[str], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:33] arg_is_optional: True
+[01/14/2025 12:33] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'str'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'str'>
+[01/14/2025 12:33] arg_is_input: True
+[01/14/2025 12:33] arg_is_output: False
+[01/14/2025 12:33] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'str'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'str'>
+[01/14/2025 12:33] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:33] origin: typing.Union
+[01/14/2025 12:33] args_t: (<class 'int'>, typing.Awaitable[int], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:33] arg_is_optional: True
+[01/14/2025 12:33] is_input typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'int'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'int'>
+[01/14/2025 12:33] arg_is_input: True
+[01/14/2025 12:33] arg_is_output: False
+[01/14/2025 12:33] is_input typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'int'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'int'>
+[01/14/2025 12:33] __annotations__ {'ca_cert_pem': pulumi.output.Output[str], 'private_key': pulumi.output.Output[str]}
+[01/14/2025 12:33] 
+type(arg): <class 'typing._GenericAlias'>
+[01/14/2025 12:33] origin: <class 'pulumi.output.Output'>
+[01/14/2025 12:33] args_t: (<class 'str'>,)
+[01/14/2025 12:33] arg_is_optional: False
+[01/14/2025 12:33] is_input pulumi.output.Output[str]
+[01/14/2025 12:33] arg_is_input: False
+[01/14/2025 12:33] arg_is_output: True
+[01/14/2025 12:33] 
+type(arg): <class 'typing._GenericAlias'>
+[01/14/2025 12:33] origin: <class 'pulumi.output.Output'>
+[01/14/2025 12:33] args_t: (<class 'str'>,)
+[01/14/2025 12:33] arg_is_optional: False
+[01/14/2025 12:33] is_input pulumi.output.Output[str]
+[01/14/2025 12:33] arg_is_input: False
+[01/14/2025 12:33] arg_is_output: True
+[01/14/2025 12:33] Creating self-signed certificate name=cert args=SelfSignedCertificateArgs(algorithm='RSA', ecdsa_curve='P224', rsa_bits=2048.0) opts=<pulumi.resource.ResourceOptions object at 0x101be0ad0>
+[01/14/2025 12:33] comp_instance: <component.SelfSignedCertificate object at 0x101be0590>
+[01/14/2025 12:33] keys: ['ca_cert_pem', 'private_key']
+[01/14/2025 12:33] __annotations__ {'algorithm': typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType], 'ecdsa_curve': typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType], 'rsa_bits': typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]}
+[01/14/2025 12:33] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:33] origin: typing.Union
+[01/14/2025 12:33] args_t: (<class 'str'>, typing.Awaitable[str], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:33] arg_is_optional: True
+[01/14/2025 12:33] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'str'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'str'>
+[01/14/2025 12:33] arg_is_input: True
+[01/14/2025 12:33] arg_is_output: False
+[01/14/2025 12:33] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'str'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'str'>
+[01/14/2025 12:33] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:33] origin: typing.Union
+[01/14/2025 12:33] args_t: (<class 'str'>, typing.Awaitable[str], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:33] arg_is_optional: True
+[01/14/2025 12:33] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'str'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'str'>
+[01/14/2025 12:33] arg_is_input: True
+[01/14/2025 12:33] arg_is_output: False
+[01/14/2025 12:33] is_input typing.Union[str, typing.Awaitable[str], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'str'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'str'>
+[01/14/2025 12:33] 
+type(arg): <class 'typing._UnionGenericAlias'>
+[01/14/2025 12:33] origin: typing.Union
+[01/14/2025 12:33] args_t: (<class 'int'>, typing.Awaitable[int], ForwardRef('Output[T]'), <class 'NoneType'>)
+[01/14/2025 12:33] arg_is_optional: True
+[01/14/2025 12:33] is_input typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'int'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'int'>
+[01/14/2025 12:33] arg_is_input: True
+[01/14/2025 12:33] arg_is_output: False
+[01/14/2025 12:33] is_input typing.Union[int, typing.Awaitable[int], ForwardRef('Output[T]'), NoneType]
+[01/14/2025 12:33] typeVar: None
+[01/14/2025 12:33] awaitable args = (<class 'int'>,)
+[01/14/2025 12:33] has_awaitable: True
+[01/14/2025 12:33] has_output: True
+[01/14/2025 12:33] base_type: <class 'int'>
+[01/14/2025 12:33] __annotations__ {'ca_cert_pem': pulumi.output.Output[str], 'private_key': pulumi.output.Output[str]}
+[01/14/2025 12:33] 
+type(arg): <class 'typing._GenericAlias'>
+[01/14/2025 12:33] origin: <class 'pulumi.output.Output'>
+[01/14/2025 12:33] args_t: (<class 'str'>,)
+[01/14/2025 12:33] arg_is_optional: False
+[01/14/2025 12:33] is_input pulumi.output.Output[str]
+[01/14/2025 12:33] arg_is_input: False
+[01/14/2025 12:33] arg_is_output: True
+[01/14/2025 12:33] 
+type(arg): <class 'typing._GenericAlias'>
+[01/14/2025 12:33] origin: <class 'pulumi.output.Output'>
+[01/14/2025 12:33] args_t: (<class 'str'>,)
+[01/14/2025 12:33] arg_is_optional: False
+[01/14/2025 12:33] is_input pulumi.output.Output[str]
+[01/14/2025 12:33] arg_is_input: False
+[01/14/2025 12:33] arg_is_output: True
+[01/14/2025 12:33] Creating self-signed certificate name=cert args=SelfSignedCertificateArgs(algorithm='RSA', ecdsa_curve='P224', rsa_bits=2048.0) opts=<pulumi.resource.ResourceOptions object at 0x101c40ad0>
+[01/14/2025 12:33] comp_instance: <component.SelfSignedCertificate object at 0x101c40590>
+[01/14/2025 12:33] keys: ['ca_cert_pem', 'private_key']
+[01/14/2025 13:52] state={'ca_cert_pem': <pulumi.output.Output object at 0x101abe510>, 'private_key': <pulumi.output.Output object at 0x101ada040>, 'hello': 'world'}
+[01/14/2025 13:52] state={'ca_cert_pem': <pulumi.output.Output object at 0x105fc2510>, 'private_key': <pulumi.output.Output object at 0x105fde040>, 'hello': 'world'}
+[01/14/2025 13:54] state={'ca_cert_pem': <pulumi.output.Output object at 0x102186510>, 'private_key': <pulumi.output.Output object at 0x1021a2040>, 'hello': 'world'}
+[01/14/2025 14:13] state={'ca_cert_pem': <pulumi.output.Output object at 0x103a764a0>, 'private_key': <pulumi.output.Output object at 0x103a91fd0>}
+[01/14/2025 14:15] component.__annotations__={'ca_cert_pem': pulumi.output.Output[str], 'private_key': pulumi.output.Output[str]}
+[01/14/2025 14:15] keys=['ca_cert_pem', 'private_key']
+[01/14/2025 14:15] state={'ca_cert_pem': <pulumi.output.Output object at 0x103bfa510>, 'private_key': <pulumi.output.Output object at 0x103c16040>}
+[01/14/2025 14:20] ca_cert = <pulumi_tls.self_signed_cert.SelfSignedCert object at 0x1040056a0>
+[01/14/2025 14:20] component.__annotations__={'ca_cert_pem': pulumi.output.Output[str], 'private_key': pulumi.output.Output[str]}
+[01/14/2025 14:20] keys=['ca_cert_pem', 'private_key']
+[01/14/2025 14:20] state={'ca_cert_pem': <pulumi.output.Output object at 0x104082510>, 'private_key': <pulumi.output.Output object at 0x10409e040>}

@@ -1,0 +1,12 @@
+name: example
+description: A python program using the component provider
+runtime:
+  name: python
+  options:
+    toolchain: uv
+plugins:
+  providers:
+    - name: banana
+      path: ../my-component
+      # RunPlugin will call https://github.com/pulumi/pulumi/pull/17847/files#diff-1d55ae8211edac843d76e08476f3be744b9fc96f27d277005ed4b4a71c3f4983R284-R286
+      # see that there is a component, and then host the provider

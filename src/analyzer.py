@@ -1,22 +1,19 @@
-from collections.abc import Awaitable
 import importlib.util
-import sys
 import inspect
+import sys
+from collections.abc import Awaitable
+from dataclasses import dataclass
+from pathlib import Path
 from types import ModuleType
 from typing import (
     ForwardRef,
     Optional,
-    TypeVar,
     Union,
     get_args,
     get_origin,
 )
-from dataclasses import dataclass
-from pathlib import Path
 
 import pulumi
-# from pulumi import Output, Input, Inputs  # noqa
-# from pulumi.output import T  # noqa
 
 
 @dataclass
@@ -57,7 +54,7 @@ class Analyzer:
 
     def analyze_file(self, file_path: Path) -> dict[str, ComponentSchema]:
         components: dict[str, ComponentSchema] = {}
-        module_type = self._load_module(str(file_path))
+        module_type = self._load_module(file_path)
         for name in dir(module_type):
             obj = getattr(module_type, name)
             if inspect.isclass(obj):
@@ -66,7 +63,7 @@ class Analyzer:
                     components[name] = component
         return components
 
-    def _load_module(self, file_path: str) -> ModuleType:
+    def _load_module(self, file_path: Path) -> ModuleType:
         spec = importlib.util.spec_from_file_location("component", file_path)
         if not spec:
             raise Exception(f"Could not load module spec at {file_path}")
@@ -92,26 +89,21 @@ class Analyzer:
             type_definitions={},
         )
 
+    def analyze_component_outputs(
+        self, component: type[pulumi.ComponentResource]
+    ) -> list[str]:
+        return [k for k, v in component.__annotations__.items()]
+
     def analyze_types(self, typ: type) -> dict[str, SchemaProperty]:
-        print(f"__annotations__ {typ.__annotations__}")
         # TODO: should we use get_type_hints instead to resolve ForwardRefs?
         # What's the global context?
         # hints = get_type_hints(typ, globalns=globals())
-        # print(f"hints: {hints}")
         return {k: self.analyze_arg(typ) for k, typ in typ.__annotations__.items()}
 
     def analyze_arg(self, arg: type) -> SchemaProperty:
-        print(f"\ntype(arg): {type(arg)}")
-        origin = get_origin(arg)
-        print(f"origin: {origin}")
-        args_t = get_args(arg)
-        print(f"args_t: {args_t}")
         arg_is_optional = is_optional(arg)
-        print(f"arg_is_optional: {arg_is_optional}")
         arg_is_input = is_input(arg)
-        print(f"arg_is_input: {arg_is_input}")
         arg_is_output = is_output(arg)
-        print(f"arg_is_output: {arg_is_output}")
         arg_is_plain = is_plain(arg)
         if arg_is_plain:
             unwrapped = arg
@@ -124,9 +116,8 @@ class Analyzer:
         else:
             raise ValueError(f"Unsupported type {arg}")
         # TODO:
-        #  * typed dict arguments type, instead of args class
         #  * list property
-        #  * typed dict property?
+        #  * (typed)dict property
 
         return SchemaProperty(
             type=unwrapped,
@@ -174,58 +165,47 @@ def is_output(typ: type):
     origin = get_origin(typ)
     if is_optional(typ):
         return any(is_output(arg) for arg in get_args(typ))
-    # elif is_forward_ref(typ):
-    #     return typ.__forward_arg__ == "Output[T]"
     else:
-        return origin is not None and origin == pulumi.Output
+        return origin == pulumi.Output
 
 
-def unwrap_output(typ: type) -> Optional[type]:
+def unwrap_output(typ: type) -> type:
+    if not is_output(typ):
+        raise ValueError("Not an output type")
     if is_optional(typ):
         elements = get_args(typ)
         for element in elements:
             if is_output(element):
                 args = get_args(element)
                 return args[0]
-    if not is_output(typ):
-        return None
     args = get_args(typ)
     return args[0]
 
 
-# Input = Union[T, Awaitable[T], "Output[T]"]
-# Inputs = Mapping[str, Input[Any]]
-# InputType = Union[T, Mapping[str, Any]]
-
-
 def is_input(typ: type) -> bool:
-    print(f"is_input {str(typ)}")
+    """
+    An input type is a Union that includes Awaitable, Output and a plain type.
+    """
     origin = get_origin(typ)
-    if origin is not None and origin == Union:
-        has_awaitable = False
-        has_output = False
-        base_type = None
+    if origin is not Union:
+        return False
 
-        typeVar = get_typevar(typ)
-        print(f"typeVar: {typeVar}")
-
-        for element in get_args(typ):
-            if get_origin(element) is Awaitable:
-                args = get_args(element)
-                print(f"awaitable args = {args}")
-                has_awaitable = True
-                base_type = args[0]
-            if is_output(element):
+    has_awaitable = False
+    has_output = False
+    base_type = None
+    for element in get_args(typ):
+        if get_origin(element) is Awaitable:
+            args = get_args(element)
+            has_awaitable = True
+            base_type = args[0]
+        if is_output(element):
+            has_output = True
+        if is_forward_ref(element):
+            if element.__forward_arg__ == "Output[T]":
                 has_output = True
-            if is_forward_ref(element):
-                if element.__forward_arg__ == "Output[T]":
-                    has_output = True
 
-        print(f"has_awaitable: {has_awaitable}")
-        print(f"has_output: {has_output}")
-        print(f"base_type: {base_type}")
-        if has_awaitable and has_output and base_type is not None:
-            return True
+    if has_awaitable and has_output and base_type is not None:
+        return True
     return False
 
 
@@ -237,20 +217,6 @@ def unwrap_input(typ: type) -> type:
         if get_origin(element) is Awaitable:
             return get_args(element)[0]
     raise ValueError("Input type with no Awaitable elements")
-
-
-def is_typevar(typ: type) -> bool:
-    return typ is TypeVar
-
-
-def get_typevar(typ: type) -> Optional[type]:
-    if typ is TypeVar:
-        return typ
-    elif get_origin(typ) is Union:
-        for arg in get_args(typ):
-            if arg is TypeVar:
-                return arg
-    return None
 
 
 def is_forward_ref(typ: type) -> bool:

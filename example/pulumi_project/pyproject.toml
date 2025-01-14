@@ -1,0 +1,10 @@
+[project]
+name = "pulumi-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["pulumi-banana", "pulumi>=3.145.0"]
+
+[tool.uv.sources]
+pulumi-banana = { path = "../generated-sdk/python", editable = true }

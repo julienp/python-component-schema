@@ -1,0 +1,14 @@
+[project]
+name = "my-component"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pulumi-tls>=5.0.10",
+    "pulumi>=3.145.0",
+    "python-component-schema",
+]
+
+[tool.uv.sources]
+python-component-schema = { path = "../../", editable = true }

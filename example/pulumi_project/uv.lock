@@ -113,9 +113,9 @@ wheels = [
 ]
 
 [[package]]
-name = "pulumi-banana"
+name = "pulumi-my-component"
 version = "0.0.0"
-source = { directory = "sdks/banana" }
+source = { editable = "../generated-sdk/python" }
 dependencies = [
     { name = "parver" },
     { name = "pulumi" },
@@ -136,13 +136,13 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "pulumi" },
-    { name = "pulumi-banana" },
+    { name = "pulumi-my-component" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "pulumi", specifier = ">=3.145.0" },
-    { name = "pulumi-banana", directory = "sdks/banana" },
+    { name = "pulumi-my-component", editable = "../generated-sdk/python" },
 ]
 
 [[package]]

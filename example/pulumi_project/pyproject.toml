@@ -5,9 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "pulumi-banana",
+    "pulumi-my-component",
     "pulumi>=3.145.0",
 ]
 
 [tool.uv.sources]
-pulumi-banana = { path = "sdks/banana" }
+pulumi-my-component = { path = "../generated-sdk/python", editable = true }

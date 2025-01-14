@@ -1,0 +1,16 @@
+name: cert-component-yaml
+runtime: yaml
+plugins:
+  providers:
+    - name: my-component
+      path: ../my-component
+resources:
+  mycert:
+    type: my-component:SelfSignedCertificate
+    properties:
+      algorithm: RSA
+      ecdsa_curve: P256
+      rsa_bits: 2048
+outputs:
+  cert_pem: ${mycert.ca_cert_pem}
+  cert_private_key: ${mycert.private_key}

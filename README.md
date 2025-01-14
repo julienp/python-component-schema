@@ -1,7 +1,7 @@
 # Python Component as Component
 
 ```bash
-cd example/pulumi_project
+cd example/pulumi_project_py
 pulumi package gen-sdk ../my-component --out ../generated-sdk --language python
 uv add --editable ../generated-sdk/python
 pulumi preview

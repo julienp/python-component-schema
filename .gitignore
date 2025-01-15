@@ -1,3 +1,3 @@
 src/python_component_schema.egg-info
 example/generated-sdk/python
-example/pulumi_project/components.log
+example/*/components.log

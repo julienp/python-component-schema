@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
 
-
 import pulumi
 import pulumi_tls as tls
 
@@ -11,6 +10,7 @@ import pulumi_tls as tls
 class SelfSignedCertificateArgs:
     # subject: pulumi.Input[tls.SelfSignedCertSubjectArgsDict]  # TODO: handle this
     algorithm: Optional[pulumi.Input[str]]
+    """The algorithm to use for the key."""
     ecdsa_curve: Optional[pulumi.Input[str]]
     rsa_bits: Optional[pulumi.Input[int]]
 
@@ -18,6 +18,7 @@ class SelfSignedCertificateArgs:
 class SelfSignedCertificate(pulumi.ComponentResource):
     ca_cert_pem: pulumi.Output[str]
     private_key: pulumi.Output[str]
+    """The private key."""
 
     def __init__(
         self,

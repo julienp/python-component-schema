@@ -1,3 +1,4 @@
+import ast
 import importlib.util
 import inspect
 import sys
@@ -23,7 +24,7 @@ class SchemaProperty:
     type: Optional[type]
     ref: Optional[str]
     optional: bool
-    description: Optional[str]
+    description: Optional[str] = None
 
 
 @dataclass
@@ -44,12 +45,14 @@ class ComponentSchema:
 class Analyzer:
     def __init__(self, path: Path):
         self.path = path
+        self.docstrings = {}
 
     def analyze(self) -> dict[str, ComponentSchema]:
         """
         analyze walks the directory at `self.path` and searches for
         ComponentResources in all the Python files.
         """
+        self.docstrings = self.find_docstrings()
         components: dict[str, ComponentSchema] = {}
         for file_path in self.path.iterdir():
             if file_path.suffix != ".py":
@@ -107,7 +110,7 @@ class Analyzer:
         if not args:
             raise Exception(f"Could not find in {component}'s __init__ method")
         return ComponentSchema(
-            description="",
+            description=component.__doc__.strip() if component.__doc__ else None,
             inputs=self.analyze_types(args),
             outputs=self.analyze_types(component),
             type_definitions={},
@@ -144,10 +147,15 @@ class Analyzer:
         # TODO: should we use get_type_hints instead to resolve ForwardRefs?
         # What's the global context?
         # hints = get_type_hints(typ, globalns=globals())
-        return {
-            self.arg_name(k): self.analyze_arg(typ)
-            for k, typ in typ.__annotations__.items()
-        }
+
+        args = {k: self.analyze_arg(typ) for k, typ in typ.__annotations__.items()}
+
+        types = {}
+        for k, v in args.items():
+            v.description = self.docstrings.get(typ.__name__, {}).get(k)
+            types[self.arg_name(k)] = v
+
+        return types
 
     def analyze_arg(self, arg: type) -> SchemaProperty:
         """
@@ -176,8 +184,57 @@ class Analyzer:
             type=unwrapped,
             ref=None,
             optional=arg_is_optional,
-            description="",
+            description=None,
         )
+
+    def find_docstrings(self) -> dict[str, dict[str, str]]:
+        """
+        find_docstrings returns the docstrings for all the attributes of all
+        the classes in `self.path.
+
+        Unfortunately, only class docstrings are available at runtime, the
+        docstrings of the attributes are not available. Instead of relying on
+        runtime information we parse the source code to extract the docstrings.
+        """
+        docs = {}
+        for file_path in self.path.iterdir():
+            if file_path.suffix != ".py":
+                continue
+            with open(file_path) as f:
+                src = f.read()
+                t = ast.parse(src)
+                docs.update(self.find_docstrings_in_module(t))
+        return docs
+
+    def find_docstrings_in_module(self, mod: ast.Module) -> dict[str, dict[str, str]]:
+        docs: dict[str, dict[str, str]] = {}
+        for stmt in mod.body:
+            if isinstance(stmt, ast.ClassDef):
+                class_name = stmt.name
+                docs[class_name] = {}
+                it = iter(stmt.body)
+                while True:
+                    try:
+                        node = next(it)
+                        if isinstance(node, ast.AnnAssign):
+                            if isinstance(node.target, ast.Name):
+                                name = node.target.id
+                                # Look for a docstring right after the assignment
+                                try:
+                                    node = next(it)
+                                    if isinstance(node, ast.Expr) and isinstance(
+                                        node.value, ast.Str
+                                    ):
+                                        docs[class_name][name] = node.value.value
+                                    else:
+                                        # Push back the node if it's not a docstring
+                                        it = iter([node] + list(it))
+                                except StopIteration:
+                                    break
+                    except StopIteration:
+                        break
+
+        return docs
 
     def arg_name(self, name: str) -> str:
         return camel_case(name)

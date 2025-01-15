@@ -49,10 +49,12 @@ class Resource:
     required_inputs: list[str]
     properties: dict[str, Property]
     required: list[str]
+    description: Optional[str] = None
 
     def to_json(self) -> dict[str, Any]:
         return {
             "isComponent": self.is_component,
+            "description": self.description,
             "type": self.type,
             "inputProperties": {
                 k: v.to_json() for k, v in self.input_properties.items()

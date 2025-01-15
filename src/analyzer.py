@@ -21,14 +21,15 @@ from util import camel_case
 
 @dataclass
 class SchemaProperty:
-    type: Optional[type]
-    ref: Optional[str]
-    optional: bool
+    optional: bool = False
+    type_: Optional[type] = None
+    ref: Optional[str] = None
     description: Optional[str] = None
 
 
 @dataclass
 class TypeDefinition:
+    name: str
     type: str
     properties: dict[str, SchemaProperty]
     description: Optional[str]
@@ -36,16 +37,16 @@ class TypeDefinition:
 
 @dataclass
 class ComponentSchema:
-    description: Optional[str]
     inputs: dict[str, SchemaProperty]
     outputs: dict[str, SchemaProperty]
-    type_definitions: dict[str, TypeDefinition]
+    description: Optional[str] = None
 
 
 class Analyzer:
     def __init__(self, path: Path):
         self.path = path
-        self.docstrings = {}
+        self.docstrings: dict[str, dict[str, str]] = {}
+        self.type_definitions: dict[str, TypeDefinition] = {}
 
     def analyze(self) -> dict[str, ComponentSchema]:
         """
@@ -53,6 +54,9 @@ class Analyzer:
         ComponentResources in all the Python files.
         """
         self.docstrings = self.find_docstrings()
+        return self.analyze_dir()
+
+    def analyze_dir(self) -> dict[str, ComponentSchema]:
         components: dict[str, ComponentSchema] = {}
         for file_path in self.path.iterdir():
             if file_path.suffix != ".py":
@@ -113,7 +117,6 @@ class Analyzer:
             description=component.__doc__.strip() if component.__doc__ else None,
             inputs=self.analyze_types(args),
             outputs=self.analyze_types(component),
-            type_definitions={},
         )
 
     def analyze_component_outputs(
@@ -148,43 +151,60 @@ class Analyzer:
         # What's the global context?
         # hints = get_type_hints(typ, globalns=globals())
 
-        args = {k: self.analyze_arg(typ) for k, typ in typ.__annotations__.items()}
-
         types = {}
-        for k, v in args.items():
-            v.description = self.docstrings.get(typ.__name__, {}).get(k)
-            types[self.arg_name(k)] = v
-
+        if not hasattr(typ, "__annotations__"):
+            return types
+        for k, v in typ.__annotations__.items():
+            (schema_property, type_def) = self.analyze_arg(v)
+            schema_property.description = self.docstrings.get(typ.__name__, {}).get(k)
+            if type_def:
+                self.type_definitions[type_def.name] = type_def
+                ref = f"#/types/my-component:index:{type_def.name}"
+                schema_property.ref = ref
+            types[self.arg_name(k)] = schema_property
         return types
 
-    def analyze_arg(self, arg: type) -> SchemaProperty:
+    def analyze_arg(
+        self, arg: type, optional: Optional[bool] = None
+    ) -> tuple[SchemaProperty, Optional[TypeDefinition]]:
         """
         analyze_arg analyzes a single annotation and turns it into a SchemaProperty.
+
+        Any complex types are stored as TypeDefinitions in `self.type_definitions`.
         """
-        arg_is_optional = is_optional(arg)
-        arg_is_input = is_input(arg)
-        arg_is_output = is_output(arg)
-        arg_is_plain = is_plain(arg)
-        if arg_is_plain:
+        optional = optional if optional is not None else is_optional(arg)
+        unwrapped = None
+        ref = None
+        type_def = None
+        if is_plain(arg):
             unwrapped = arg
-        elif arg_is_input:
-            unwrapped = unwrap_input(arg)
-        elif arg_is_output:
-            unwrapped = unwrap_output(arg)
-        elif arg_is_optional:
-            unwrapped = unwrap_optional(arg)
+        elif is_input(arg):
+            return self.analyze_arg(unwrap_input(arg), optional=optional)
+        elif is_output(arg):
+            return self.analyze_arg(unwrap_output(arg), optional=optional)
+        elif is_optional(arg):
+            return self.analyze_arg(unwrap_optional(arg), optional=True)
+        elif not is_builtin(arg):
+            unwrapped = None
+            type_def = TypeDefinition(
+                name=self.arg_name(arg.__name__),
+                type="object",
+                properties=self.analyze_types(arg),
+                description=arg.__doc__,
+            )
         else:
             raise ValueError(f"Unsupported type {arg}")
         # TODO:
-        #  * user defined types
         #  * list property
         #  * dict/TypedDict
 
-        return SchemaProperty(
-            type=unwrapped,
-            ref=None,
-            optional=arg_is_optional,
-            description=None,
+        return (
+            SchemaProperty(
+                type_=unwrapped,
+                ref=ref,
+                optional=optional,
+            ),
+            type_def,
         )
 
     def find_docstrings(self) -> dict[str, dict[str, str]]:
@@ -251,7 +271,7 @@ def is_optional(typ: type) -> bool:
     return False
 
 
-def unwrap_optional(typ: type) -> Optional[type]:
+def unwrap_optional(typ: type) -> type:
     """
     Returns the first type of the Union that is not NoneType.
     """
@@ -265,21 +285,12 @@ def unwrap_optional(typ: type) -> Optional[type]:
 
 
 def is_output(typ: type):
-    if is_optional(typ):
-        return any(is_output(arg) for arg in get_args(typ))
-    else:
-        return get_origin(typ) == pulumi.Output
+    return get_origin(typ) == pulumi.Output
 
 
 def unwrap_output(typ: type) -> type:
     if not is_output(typ):
         raise ValueError("Not an output type")
-    if is_optional(typ):
-        elements = get_args(typ)
-        for element in elements:
-            if is_output(element):
-                args = get_args(element)
-                return args[0]
     args = get_args(typ)
     return args[0]
 
@@ -306,7 +317,7 @@ def is_input(typ: type) -> bool:
             # In the core SDK, Input includes a forward reference to Output[T]
             if element.__forward_arg__ == "Output[T]":
                 has_output = True
-        elif is_plain(element):
+        else:
             has_plain = True
 
     # We could be stricter here and ensure that the base type used in Awaitable
@@ -333,3 +344,7 @@ def unwrap_input(typ: type) -> type:
 
 def is_forward_ref(typ: type) -> bool:
     return isinstance(typ, ForwardRef)
+
+
+def is_builtin(typ: type) -> bool:
+    return typ.__module__ == "builtins"

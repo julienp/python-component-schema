@@ -6,7 +6,7 @@ from typing import Optional
 
 import pulumi
 
-from analyzer import Analyzer, ComponentSchema, SchemaProperty
+from analyzer import Analyzer, ComponentSchema, SchemaProperty, TypeDefinition
 
 
 def test_analyze_component():
@@ -31,15 +31,14 @@ def test_analyze_component():
     assert comp == ComponentSchema(
         description="A self-signed certificate.",
         inputs={
-            "algorithm": SchemaProperty(type=str, ref=None, optional=True),
-            "ecdsaCurve": SchemaProperty(type=str, ref=None, optional=True),
+            "algorithm": SchemaProperty(type_=str, optional=True),
+            "ecdsaCurve": SchemaProperty(type_=str, optional=True),
         },
         outputs={
-            "pem": SchemaProperty(type=str, ref=None, optional=False),
-            "privateKey": SchemaProperty(type=str, ref=None, optional=False),
-            "caCert": SchemaProperty(type=str, ref=None, optional=False),
+            "pem": SchemaProperty(type_=str),
+            "privateKey": SchemaProperty(type_=str),
+            "caCert": SchemaProperty(type_=str),
         },
-        type_definitions={},
     )
 
 
@@ -51,26 +50,44 @@ def test_analyze_from_path():
             description="A self-signed certificate.",
             inputs={
                 "algorithm": SchemaProperty(
-                    type=str,
-                    ref=None,
+                    type_=str,
                     optional=True,
                     description="The algorithm to use for the key.",
                 ),
                 "ecdsaCurve": SchemaProperty(
-                    type=str,
-                    ref=None,
+                    type_=str,
                     optional=True,
                     description="The curve to use for ECDSA keys.",
                 ),
+                "subject": SchemaProperty(
+                    ref="#/types/my-component:index:Subject",
+                    optional=True,
+                ),
             },
             outputs={
-                "pem": SchemaProperty(type=str, ref=None, optional=False),
-                "privateKey": SchemaProperty(
-                    type=str, ref=None, optional=False, description="The private key."
+                "pem": SchemaProperty(type_=str),
+                "privateKey": SchemaProperty(type_=str, description="The private key."),
+                "caCert": SchemaProperty(type_=str),
+                "subject": SchemaProperty(
+                    ref="#/types/my-component:index:Subject",
+                    optional=False,
+                    description="The subject.",
                 ),
-                "caCert": SchemaProperty(type=str, ref=None, optional=False),
             },
-            type_definitions={},
+        )
+    }
+
+    assert a.type_definitions == {
+        "Subject": TypeDefinition(
+            name="Subject",
+            type="object",
+            properties={
+                "cn": SchemaProperty(
+                    type_=str,
+                    description="The common name.",
+                ),
+            },
+            description="The subject of a certificate.",
         )
     }
 
@@ -81,7 +98,7 @@ def test_analyze_types_plain():
 
     a = Analyzer(Path("."))
     args = a.analyze_types(SelfSignedCertificateArgs)
-    assert args == {"algorithm": SchemaProperty(type=str, ref=None, optional=True)}
+    assert args == {"algorithm": SchemaProperty(type_=str, optional=True)}
 
 
 def test_analyze_types_output():
@@ -92,8 +109,8 @@ def test_analyze_types_output():
     a = Analyzer(Path("."))
     args = a.analyze_types(SelfSignedCertificateArgs)
     assert args == {
-        "algorithm": SchemaProperty(type=str, ref=None, optional=False),
-        "ecdsaCurve": SchemaProperty(type=str, ref=None, optional=True),
+        "algorithm": SchemaProperty(type_=str),
+        "ecdsaCurve": SchemaProperty(type_=str, optional=True),
     }
 
 
@@ -105,8 +122,60 @@ def test_analyze_types_input():
     a = Analyzer(Path("."))
     args = a.analyze_types(SelfSignedCertificateArgs)
     assert args == {
-        "algorithm": SchemaProperty(type=str, ref=None, optional=False),
-        "ecdsaCurve": SchemaProperty(type=str, ref=None, optional=True),
+        "algorithm": SchemaProperty(type_=str),
+        "ecdsaCurve": SchemaProperty(type_=str, optional=True),
+    }
+
+
+def test_analyze_type_definition():
+    # TODO test "pulumi.json#/Archive"
+
+    class Subject:
+        """The subject of a certificate."""
+
+        cn: pulumi.Input[str]
+        """The common name."""
+
+    class SelfSignedCertificateArgs:
+        subject: Optional[pulumi.Input[Subject]]
+        subjectRequired: pulumi.Input[Subject]
+
+    class SelfSignedCertificate(pulumi.ComponentResource):
+        subject: pulumi.Output[Subject]
+
+        def __init__(self, args: SelfSignedCertificateArgs):
+            pass
+
+    a = Analyzer(Path("."))
+    comp = a.analyze_component(SelfSignedCertificate)
+    assert comp == ComponentSchema(
+        inputs={
+            "subject": SchemaProperty(
+                ref="#/types/my-component:index:Subject",
+                optional=True,
+            ),
+            "subjectRequired": SchemaProperty(
+                ref="#/types/my-component:index:Subject",
+            ),
+        },
+        outputs={
+            "subject": SchemaProperty(ref="#/types/my-component:index:Subject"),
+        },
+    )
+
+    assert a.type_definitions == {
+        "Subject": TypeDefinition(
+            name="Subject",
+            type="object",
+            properties={
+                "cn": SchemaProperty(
+                    type_=str,
+                    # TODO: pick up docstring here
+                    # description="The common name.",
+                ),
+            },
+            description="The subject of a certificate.",
+        )
     }
 
 
@@ -139,9 +208,15 @@ def test_find_docstrings():
     a = Analyzer(Path("tests/testdata/tls"))
     docstrings = a.find_docstrings()
     assert docstrings == {
-        "SelfSignedCertificate": {"private_key": "The private key."},
+        "SelfSignedCertificate": {
+            "private_key": "The private key.",
+            "subject": "The subject.",
+        },
         "SelfSignedCertificateArgs": {
             "algorithm": "The algorithm to use for the key.",
             "ecdsa_curve": "The curve to use for ECDSA keys.",
+        },
+        "Subject": {
+            "cn": "The common name.",
         },
     }

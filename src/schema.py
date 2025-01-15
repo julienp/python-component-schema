@@ -1,8 +1,53 @@
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
 from typing import Any, Optional
 
-from analyzer import Analyzer, SchemaProperty
+from analyzer import Analyzer, SchemaProperty, TypeDefinition
+
+
+class BuiltinType(Enum):
+    STRING = "string"
+    INTEGER = "integer"
+    NUMBER = "number"
+    BOOLEAN = "boolean"
+    OBJECT = "object"
+
+
+@dataclass
+class ObjectType:
+    type: BuiltinType  # "object" or the underlying type of an enum
+    properties: dict[str, "Property"]
+    required: list[str]
+    description: Optional[str] = None
+
+
+@dataclass
+class ComplexType(ObjectType):
+    enum: Optional[list[Any]] = None
+
+    def to_json(self) -> dict[str, Any]:
+        return {
+            "type": self.type.value,
+            "properties": {k: v.to_json() for k, v in self.properties.items()},
+            "required": self.required,
+            "description": self.description,
+            "enum": self.enum,
+        }
+
+    @staticmethod
+    def from_analyzer(
+        type_def: TypeDefinition,
+    ) -> "ComplexType":
+        type_def.properties
+        return ComplexType(
+            type=BuiltinType.OBJECT,
+            properties={
+                k: Property.from_analyzer(v) for k, v in type_def.properties.items()
+            },
+            required=[],
+            description=type_def.description,
+        )
 
 
 @dataclass
@@ -34,19 +79,19 @@ class Property:
     def from_analyzer(property: SchemaProperty) -> "Property":
         return Property(
             description=property.description,
-            type=type_to_str(property.type) if property.type else None,
+            type=type_to_str(property.type_) if property.type_ else None,
             will_replace_on_changes=False,
             items=None,
-            ref=None,
+            ref=property.ref,
         )
 
 
 @dataclass
 class Resource:
     is_component: bool
-    type: Optional[str]
     input_properties: dict[str, Property]
     required_inputs: list[str]
+    type_: BuiltinType
     properties: dict[str, Property]
     required: list[str]
     description: Optional[str] = None
@@ -55,7 +100,7 @@ class Resource:
         return {
             "isComponent": self.is_component,
             "description": self.description,
-            "type": self.type,
+            "type": self.type_.value,
             "inputProperties": {
                 k: v.to_json() for k, v in self.input_properties.items()
             },
@@ -71,12 +116,14 @@ class PackageSpec:
     displayName: str
     version: str
     resources: dict[str, Resource]
+    types: dict[str, ComplexType]
 
     def to_json(self) -> dict[str, Any]:
         return {
             "name": self.name,
             "displayName": self.displayName,
             "version": self.version,
+            "types": {k: v.to_json() for k, v in self.types.items()},
             "resources": {k: v.to_json() for k, v in self.resources.items()},
         }
 
@@ -94,15 +141,20 @@ def type_to_str(typ: type) -> str:
 
 
 def generate_schema(name: str, version: str, path: Path) -> PackageSpec:
-    s = PackageSpec(
-        name=name, displayName="some generated SDK", version=version, resources={}
+    pkg = PackageSpec(
+        name=name,
+        displayName="some generated SDK",
+        version=version,
+        resources={},
+        types={},
     )
-    components = Analyzer(path).analyze()
+    a = Analyzer(path)
+    components = a.analyze()
     for component_name, component in components.items():
         schema_name = f"{name}:index:{component_name}"
-        s.resources[schema_name] = Resource(
+        pkg.resources[schema_name] = Resource(
             is_component=True,
-            type=component_name,
+            type_=BuiltinType.OBJECT,
             input_properties={
                 k: Property.from_analyzer(property)
                 for k, property in component.inputs.items()
@@ -116,5 +168,7 @@ def generate_schema(name: str, version: str, path: Path) -> PackageSpec:
             },
             required=[k for k, prop in component.outputs.items() if not prop.optional],
         )
+    for type_name, type_ in a.type_definitions.items():
+        pkg.types[f"my-component:index:{type_name}"] = ComplexType.from_analyzer(type_)
 
-    return s
+    return pkg

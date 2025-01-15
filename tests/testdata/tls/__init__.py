@@ -3,6 +3,13 @@ from typing import Optional
 import pulumi
 
 
+class Subject:
+    """The subject of a certificate."""
+
+    cn: pulumi.Input[str]
+    """The common name."""
+
+
 class SelfSignedCertificateArgs:
     """
     The arguments for creating a self-signed certificate.
@@ -12,6 +19,8 @@ class SelfSignedCertificateArgs:
     """The algorithm to use for the key."""
     ecdsa_curve: Optional[pulumi.Input[str]]
     """The curve to use for ECDSA keys."""
+
+    subject: Optional[pulumi.Input[Subject]]
 
 
 class SelfSignedCertificate(pulumi.ComponentResource):
@@ -23,6 +32,8 @@ class SelfSignedCertificate(pulumi.ComponentResource):
     private_key: pulumi.Output[str]
     """The private key."""
     ca_cert: pulumi.Output[str]
+    subject: pulumi.Output[Subject]
+    """The subject."""
 
     def __init__(
         self,

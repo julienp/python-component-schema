@@ -9,8 +9,9 @@ resources:
     type: my-component:SelfSignedCertificate
     properties:
       algorithm: RSA
-      ecdsaCurve: P256
-      rsaBits: 2048
+      subject:
+        cn: example.com
 outputs:
   certPem: ${mycert.caCertPem}
   certPrivateKey: ${mycert.privateKey}
+  subject: ${mycert.subject}

@@ -5,20 +5,29 @@ import pulumi
 import pulumi_tls as tls
 
 
+@dataclass
+class Subject:
+    """The subject of a certificate."""
+
+    cn: pulumi.Input[str]
+    """The common name."""
+
+
 # TODO: do we want a helper class to create the args? should we encourage TypedDict?
 @dataclass
 class SelfSignedCertificateArgs:
-    # subject: pulumi.Input[tls.SelfSignedCertSubjectArgsDict]  # TODO: handle this
-    algorithm: Optional[pulumi.Input[str]]
+    subject: pulumi.Input[Subject]
+    algorithm: Optional[pulumi.Input[str]] = None
     """The algorithm to use for the key."""
-    ecdsa_curve: Optional[pulumi.Input[str]]
-    rsa_bits: Optional[pulumi.Input[int]]
+    ecdsa_curve: Optional[pulumi.Input[str]] = None
+    rsa_bits: Optional[pulumi.Input[int]] = None
 
 
 class SelfSignedCertificate(pulumi.ComponentResource):
     ca_cert_pem: pulumi.Output[str]
     private_key: pulumi.Output[str]
     """The private key."""
+    subject: pulumi.Output[Subject]
 
     def __init__(
         self,
@@ -68,3 +77,4 @@ class SelfSignedCertificate(pulumi.ComponentResource):
 
         self.ca_cert_pem = ca_cert.cert_pem
         self.private_key = private_key.private_key_pem
+        self.subject = pulumi.Output.from_input(args.subject) if args.subject else None

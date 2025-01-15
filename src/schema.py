@@ -169,6 +169,6 @@ def generate_schema(name: str, version: str, path: Path) -> PackageSpec:
             required=[k for k, prop in component.outputs.items() if not prop.optional],
         )
     for type_name, type_ in a.type_definitions.items():
-        pkg.types[f"my-component:index:{type_name}"] = ComplexType.from_analyzer(type_)
+        pkg.types[f"{name}:index:{type_name}"] = ComplexType.from_analyzer(type_)
 
     return pkg

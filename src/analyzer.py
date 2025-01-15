@@ -159,6 +159,7 @@ class Analyzer:
             schema_property.description = self.docstrings.get(typ.__name__, {}).get(k)
             if type_def:
                 self.type_definitions[type_def.name] = type_def
+                # TODO: pass in package metadata so we can fill this in
                 ref = f"#/types/my-component:index:{type_def.name}"
                 schema_property.ref = ref
             types[self.arg_name(k)] = schema_property

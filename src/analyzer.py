@@ -216,21 +216,19 @@ class Analyzer:
                 while True:
                     try:
                         node = next(it)
+                        # Look for an assignment with a type annotation
                         if isinstance(node, ast.AnnAssign):
                             if isinstance(node.target, ast.Name):
                                 name = node.target.id
                                 # Look for a docstring right after the assignment
-                                try:
-                                    node = next(it)
-                                    if isinstance(node, ast.Expr) and isinstance(
-                                        node.value, ast.Str
-                                    ):
-                                        docs[class_name][name] = node.value.value
-                                    else:
-                                        # Push back the node if it's not a docstring
-                                        it = iter([node] + list(it))
-                                except StopIteration:
-                                    break
+                                node = next(it)
+                                if isinstance(node, ast.Expr) and isinstance(
+                                    node.value, ast.Str
+                                ):
+                                    docs[class_name][name] = node.value.value
+                                else:
+                                    # Push back the node if it's not a docstring
+                                    it = iter([node] + list(it))
                     except StopIteration:
                         break
 

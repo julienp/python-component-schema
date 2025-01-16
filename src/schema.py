@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from analyzer import Analyzer, SchemaProperty, TypeDefinition
+from metadata import Metadata
 
 
 class BuiltinType(Enum):
@@ -140,18 +141,18 @@ def type_to_str(typ: type) -> str:
     return "object"
 
 
-def generate_schema(name: str, version: str, path: Path) -> PackageSpec:
+def generate_schema(metadata: Metadata, path: Path) -> PackageSpec:
     pkg = PackageSpec(
-        name=name,
-        displayName="some generated SDK",
-        version=version,
+        name=metadata.name,
+        version=metadata.version,
+        displayName=metadata.display_name or metadata.name,
         resources={},
         types={},
     )
-    a = Analyzer(path)
+    a = Analyzer(metadata, path)
     components = a.analyze()
     for component_name, component in components.items():
-        schema_name = f"{name}:index:{component_name}"
+        schema_name = f"{metadata.name}:index:{component_name}"
         pkg.resources[schema_name] = Resource(
             is_component=True,
             type_=BuiltinType.OBJECT,
@@ -169,6 +170,8 @@ def generate_schema(name: str, version: str, path: Path) -> PackageSpec:
             required=[k for k, prop in component.outputs.items() if not prop.optional],
         )
     for type_name, type_ in a.type_definitions.items():
-        pkg.types[f"{name}:index:{type_name}"] = ComplexType.from_analyzer(type_)
+        pkg.types[f"{metadata.name}:index:{type_name}"] = ComplexType.from_analyzer(
+            type_
+        )
 
     return pkg

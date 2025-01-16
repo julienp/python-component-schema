@@ -1,8 +1,10 @@
 import sys
 from pathlib import Path
+from typing import Optional
 
 from pulumi.provider import main
 
+from metadata import Metadata
 from provider import ComponentProvider
 
 # Bail out if we're already hosting. This prevents recursion when the analyzer
@@ -11,11 +13,12 @@ from provider import ComponentProvider
 is_hosting = False
 
 
-def componentProviderHost():
+def componentProviderHost(metadata: Optional[Metadata] = None):
     global is_hosting
     if is_hosting:
         return
     is_hosting = True
     path = Path(sys.argv[0])
-    name = path.absolute().name
-    main(ComponentProvider(name, "1.0.0", path), sys.argv[1:])
+    if metadata is None:
+        metadata = Metadata(path.absolute().name, "0.0.1")
+    main(ComponentProvider(metadata, path), sys.argv[1:])

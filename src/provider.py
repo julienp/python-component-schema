@@ -6,6 +6,7 @@ import pulumi
 from pulumi.provider import ConstructResult, Provider  # ParameterizeResult
 
 from analyzer import Analyzer
+from metadata import Metadata
 from schema import generate_schema
 from util import python_name
 
@@ -13,12 +14,11 @@ from util import python_name
 class ComponentProvider(Provider):
     path: Path
 
-    def __init__(self, name: str, version: str, path: Path) -> None:
+    def __init__(self, metadata: Metadata, path: Path) -> None:
         self.path = path
-        self.version = version
-        self.name = name
-        schema = generate_schema(name, version, path)
-        super().__init__(version, json.dumps(schema.to_json()))
+        self.metadata = metadata
+        schema = generate_schema(metadata, path)
+        super().__init__(metadata.version, json.dumps(schema.to_json()))
 
     # Needs implementation in the core SDK.
     # def parameterize_args(self, args: list[str]) -> ParameterizeResult:
@@ -31,7 +31,7 @@ class ComponentProvider(Provider):
         inputs: pulumi.Inputs,
         options: Optional[pulumi.ResourceOptions] = None,
     ) -> ConstructResult:
-        a = Analyzer(self.path)
+        a = Analyzer(self.metadata, self.path)
         component_name = resource_type.split(":")[-1]
         comp, comp_args = a.find_component(component_name)
         args = comp_args(**{python_name(k): v for k, v in inputs.items()})

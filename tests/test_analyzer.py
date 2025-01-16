@@ -7,6 +7,9 @@ from typing import Optional
 import pulumi
 
 from analyzer import Analyzer, ComponentSchema, SchemaProperty, TypeDefinition
+from metadata import Metadata
+
+metadata = Metadata("my-component", "0.0.1")
 
 
 def test_analyze_component():
@@ -26,7 +29,7 @@ def test_analyze_component():
         def __init__(self, args: SelfSignedCertificateArgs):
             pass
 
-    a = Analyzer(Path("."))
+    a = Analyzer(metadata, Path("."))
     comp = a.analyze_component(SelfSignedCertificate)
     assert comp == ComponentSchema(
         description="A self-signed certificate.",
@@ -43,7 +46,7 @@ def test_analyze_component():
 
 
 def test_analyze_from_path():
-    a = Analyzer(Path("tests/testdata/tls"))
+    a = Analyzer(metadata, Path("tests/testdata/tls"))
     comps = a.analyze()
     assert comps == {
         "SelfSignedCertificate": ComponentSchema(
@@ -96,7 +99,7 @@ def test_analyze_types_plain():
     class SelfSignedCertificateArgs:
         algorithm: Optional[str]
 
-    a = Analyzer(Path("."))
+    a = Analyzer(metadata, Path("."))
     args = a.analyze_types(SelfSignedCertificateArgs)
     assert args == {"algorithm": SchemaProperty(type_=str, optional=True)}
 
@@ -106,7 +109,7 @@ def test_analyze_types_output():
         algorithm: pulumi.Output[str]
         ecdsa_curve: Optional[pulumi.Output[str]]
 
-    a = Analyzer(Path("."))
+    a = Analyzer(metadata, Path("."))
     args = a.analyze_types(SelfSignedCertificateArgs)
     assert args == {
         "algorithm": SchemaProperty(type_=str),
@@ -119,7 +122,7 @@ def test_analyze_types_input():
         algorithm: pulumi.Input[str]
         ecdsa_curve: Optional[pulumi.Input[str]]
 
-    a = Analyzer(Path("."))
+    a = Analyzer(metadata, Path("."))
     args = a.analyze_types(SelfSignedCertificateArgs)
     assert args == {
         "algorithm": SchemaProperty(type_=str),
@@ -146,7 +149,7 @@ def test_analyze_type_definition():
         def __init__(self, args: SelfSignedCertificateArgs):
             pass
 
-    a = Analyzer(Path("."))
+    a = Analyzer(metadata, Path("."))
     comp = a.analyze_component(SelfSignedCertificate)
     assert comp == ComponentSchema(
         inputs={
@@ -194,7 +197,7 @@ def test_find_docstrings_in_module():
     src = textwrap.dedent(src)
     t = ast.parse(src)
 
-    a = Analyzer(Path("."))
+    a = Analyzer(metadata, Path("."))
     docstrings = a.find_docstrings_in_module(t)
     assert docstrings == {
         "SelfSignedCertificateArgs": {
@@ -205,7 +208,7 @@ def test_find_docstrings_in_module():
 
 
 def test_find_docstrings():
-    a = Analyzer(Path("tests/testdata/tls"))
+    a = Analyzer(metadata, Path("tests/testdata/tls"))
     docstrings = a.find_docstrings()
     assert docstrings == {
         "SelfSignedCertificate": {

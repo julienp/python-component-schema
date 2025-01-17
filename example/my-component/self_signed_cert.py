@@ -27,7 +27,7 @@ class SelfSignedCertificate(pulumi.ComponentResource):
     ca_cert_pem: pulumi.Output[str]
     private_key: pulumi.Output[str]
     """The private key."""
-    subject: pulumi.Output[Subject]
+    subject: Optional[pulumi.Output[Subject]]
 
     def __init__(
         self,

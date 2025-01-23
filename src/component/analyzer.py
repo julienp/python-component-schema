@@ -16,8 +16,8 @@ from typing import (
 
 import pulumi
 
-from metadata import Metadata
-from util import camel_case
+from .metadata import Metadata
+from .util import camel_case
 
 
 @dataclass
@@ -125,6 +125,7 @@ class Analyzer:
         self, component: type[pulumi.ComponentResource]
     ) -> list[str]:
         """Returns the names of the output properties of a component."""
+        # TODO: handle optional output
         return [k for k, v in component.__annotations__.items() if is_output(v)]
 
     def analyze_types(self, typ: type) -> dict[str, SchemaProperty]:

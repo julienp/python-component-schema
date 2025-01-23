@@ -1,10 +1,10 @@
 [project]
-name = "python-component-schema"
-version = "0.1.0"
+name = "component"
+version = "0.0.1"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = ["pulumi>=3.145.0", "pytest>=8.3.4"]
+requires-python = ">=3.12"
+dependencies = ["pulumi>=3.145.0"]
 
 [tool.pyright]
 venvPath = "."
@@ -13,3 +13,13 @@ extraPaths = ["src"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = ["build>=1.2.2.post1", "pytest>=8.3.4"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/components"]

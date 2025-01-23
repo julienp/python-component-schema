@@ -6,8 +6,8 @@ from typing import Optional
 
 import pulumi
 
-from analyzer import Analyzer, ComponentSchema, SchemaProperty, TypeDefinition
-from metadata import Metadata
+from component.analyzer import Analyzer, ComponentSchema, SchemaProperty, TypeDefinition
+from component.metadata import Metadata
 
 metadata = Metadata("my-component", "0.0.1")
 

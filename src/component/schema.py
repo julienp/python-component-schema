@@ -3,8 +3,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Optional
 
-from analyzer import Analyzer, SchemaProperty, TypeDefinition
-from metadata import Metadata
+from .analyzer import Analyzer, SchemaProperty, TypeDefinition
+from .metadata import Metadata
 
 
 class BuiltinType(Enum):

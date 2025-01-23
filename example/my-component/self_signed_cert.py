@@ -25,9 +25,11 @@ class SelfSignedCertificateArgs:
 
 class SelfSignedCertificate(pulumi.ComponentResource):
     ca_cert_pem: pulumi.Output[str]
+    rsa_bits: pulumi.Output[int]
+    ecdsa_curve: pulumi.Output[str]
     private_key: pulumi.Output[str]
     """The private key."""
-    subject: Optional[pulumi.Output[Subject]]
+    subject: pulumi.Output[Subject]
 
     def __init__(
         self,
@@ -43,7 +45,6 @@ class SelfSignedCertificate(pulumi.ComponentResource):
             opts,
         )
         algorithm = args.algorithm or "RSA"
-        ecdsa_curve = args.ecdsa_curve or "P224"
         ecdsa_curve = args.ecdsa_curve or "P224"
         rsa_bits = args.rsa_bits or 2048
 
@@ -75,6 +76,15 @@ class SelfSignedCertificate(pulumi.ComponentResource):
             opts=pulumi.ResourceOptions(parent=ca_key),
         )
 
+        self.rsa_bits = pulumi.Output.from_input(rsa_bits)
+        self.ecdsa_curve = pulumi.Output.from_input(ecdsa_curve)
+        self.rsa_bits = pulumi.Output.from_input(rsa_bits)
         self.ca_cert_pem = ca_cert.cert_pem
         self.private_key = private_key.private_key_pem
-        self.subject = pulumi.Output.from_input(args.subject) if args.subject else None
+
+        self.register_outputs(
+            {
+                "cacertPem": self.ca_cert_pem,
+                "privateKey": self.private_key,
+            }
+        )

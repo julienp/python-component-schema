@@ -5,10 +5,10 @@ from typing import Any, Optional, cast
 import pulumi
 from pulumi.provider import ConstructResult, Provider  # ParameterizeResult
 
-from analyzer import Analyzer
-from metadata import Metadata
-from schema import generate_schema
-from util import python_name
+from .analyzer import Analyzer
+from .metadata import Metadata
+from .schema import generate_schema
+from .util import python_name
 
 
 class ComponentProvider(Provider):

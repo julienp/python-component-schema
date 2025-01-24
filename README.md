@@ -1,12 +1,59 @@
 # Python Component as Component
 
+This is a proof of concept to build a provider from Python code using type annotations to define the schema.
+
+## Usage
+
+Subclass `pulumi.ComponentResource` and use type annotations to define the schema:
+
+```python
+# A class defining the inputs for the component
+@dataclass
+class ServiceArgs:
+    region: pulumi.Input[str]
+    project: pulumi.Input[str]
+    app_path: Optional[pulumi.Input[str]] = "./app"
+    image_name: Optional[pulumi.Input[str]] = "image"
+
+# The component class that will be constructed by the provider
+class Service(pulumi.ComponentResource):
+    # Define the outputs of the component
+    url: pulumi.Output[Optional[str]]
+    image_digest: pulumi.Output[str]
+
+    def __init__(
+        self,
+        name: str,
+        args: ServiceArgs,
+        opts: Optional[pulumi.ResourceOptions] = None,
+    ):
+        super().__init__("cloudrun:index:Service", name, {}, opts)
+        # Create your resources etc.
+```
+
+Create a hosting provider for the class by adding a `__main__.py` file that uses `componentProviderHost`:
+
+```python
+from component.host import componentProviderHost
+from component.metadata import Metadata
+
+componentProviderHost(
+    Metadata(name="my-component", version="1.2.3", display_name="My Component")
+)
+```
+
+## Example
+
+The example folder contains a component in `my-component` that generates a self-signed certificate.
+The `pulumi_project_yaml` folder contains a Pulumi YAML project that uses
+The `pulumi_project_py` folder contains a Pulumi Python project that uses the component via the generated SDK.
+
 ```bash
 cd example/pulumi_project_py
 pulumi package gen-sdk ../my-component --out ../generated-sdk --language python
 uv add --editable ../generated-sdk/python
 pulumi preview
 ```
-
 
 ```
 Updating (dev)

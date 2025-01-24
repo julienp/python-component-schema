@@ -118,6 +118,7 @@ class PackageSpec:
     version: str
     resources: dict[str, Resource]
     types: dict[str, ComplexType]
+    language: dict[str, dict[str, Any]]
 
     def to_json(self) -> dict[str, Any]:
         return {
@@ -126,6 +127,7 @@ class PackageSpec:
             "version": self.version,
             "types": {k: v.to_json() for k, v in self.types.items()},
             "resources": {k: v.to_json() for k, v in self.resources.items()},
+            "language": self.language,
         }
 
 
@@ -148,6 +150,23 @@ def generate_schema(metadata: Metadata, path: Path) -> PackageSpec:
         displayName=metadata.display_name or metadata.name,
         resources={},
         types={},
+        language={
+            "nodejs": {
+                "respectSchemaVersion": True,
+            },
+            "python": {
+                "respectSchemaVersion": True,
+            },
+            "csharp": {
+                "respectSchemaVersion": True,
+            },
+            "java": {
+                "respectSchemaVersion": True,
+            },
+            "go": {
+                "respectSchemaVersion": True,
+            },
+        },
     )
     a = Analyzer(metadata, path)
     components = a.analyze()

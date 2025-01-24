@@ -1,7 +1,7 @@
 [project]
 name = "pulumi-components-test"
-version = "0.0.5"
-description = "Add your description here"
+version = "0.0.7"
+description = "This is a proof of concept to build a provider from Python code using type annotations to define the schema."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = ["pulumi>=3.145.0"]

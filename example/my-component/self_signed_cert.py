@@ -78,13 +78,8 @@ class SelfSignedCertificate(pulumi.ComponentResource):
 
         self.rsa_bits = pulumi.Output.from_input(rsa_bits)
         self.ecdsa_curve = pulumi.Output.from_input(ecdsa_curve)
-        self.rsa_bits = pulumi.Output.from_input(rsa_bits)
         self.ca_cert_pem = ca_cert.cert_pem
         self.private_key = private_key.private_key_pem
+        self.subject = pulumi.Output.from_input(args.subject)
 
-        self.register_outputs(
-            {
-                "cacertPem": self.ca_cert_pem,
-                "privateKey": self.private_key,
-            }
-        )
+        self.register_outputs({})

@@ -37,5 +37,7 @@ class ComponentProvider(Provider):
         args = comp_args(**{python_name(k): v for k, v in inputs.items()})
         comp_instance = cast(Any, comp)(name, args, options)
         keys = a.analyze_component_outputs(type(comp_instance))
-        state = {a.arg_name(k): getattr(comp_instance, k, None) for k in keys}
+        state = {
+            a.arg_name(k): getattr(comp_instance, python_name(k), None) for k in keys
+        }
         return ConstructResult(comp_instance.urn, state)

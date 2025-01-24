@@ -125,8 +125,7 @@ class Analyzer:
         self, component: type[pulumi.ComponentResource]
     ) -> list[str]:
         """Returns the names of the output properties of a component."""
-        # TODO: handle optional output
-        return [k for k, v in component.__annotations__.items() if is_output(v)]
+        return list(self.analyze_types(component).keys())
 
     def analyze_types(self, typ: type) -> dict[str, SchemaProperty]:
         """

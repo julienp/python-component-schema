@@ -69,11 +69,10 @@ def test_analyze_from_path():
             },
             outputs={
                 "pem": SchemaProperty(type_=str),
-                "privateKey": SchemaProperty(type_=str, description="The private key."),
+                "privateKey": SchemaProperty(type_=str, description="The private key.", optional=True),
                 "caCert": SchemaProperty(type_=str),
                 "subject": SchemaProperty(
                     ref="#/types/my-component:index:Subject",
-                    optional=False,
                     description="The subject.",
                 ),
             },

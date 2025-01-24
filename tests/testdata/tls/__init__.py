@@ -29,7 +29,7 @@ class SelfSignedCertificate(pulumi.ComponentResource):
     """
 
     pem: pulumi.Output[str]
-    private_key: pulumi.Output[str]
+    private_key: Optional[pulumi.Output[str]]
     """The private key."""
     ca_cert: pulumi.Output[str]
     subject: pulumi.Output[Subject]
